@@ -21,32 +21,28 @@
 
             <!-- Campo: Nombre -->
             <VerticalStackLayout Spacing="4">
-                <Label Text="Nombre completo" FontAttributes="Bold"/>
+                <Label Text="Nombre completo" Style="{StaticResource FieldLabel}"/>
                 <Entry Text="{Binding Name, Mode=TwoWay}" 
                        Placeholder="Ingresar nombre completo" 
                        ClearButtonVisibility="WhileEditing"/>
-                
-                <Label Text="{Binding NameError}" 
-                       TextColor="#DC2626" 
-                       FontSize="12"/>
+
+                <Label Text="{Binding NameError}" Style="{StaticResource ErrorLabel}"/>
             </VerticalStackLayout>
 
             <!-- Campo: Edad -->
             <VerticalStackLayout Spacing="4">
-                <Label Text="Edad" FontAttributes="Bold"/>
+                <Label Text="Edad" Style="{StaticResource FieldLabel}"/>
                 <Entry Text="{Binding Age, Mode=TwoWay}" 
                        Placeholder="Ingresar edad" 
                        Keyboard="Numeric" 
                        TextChanged="OnEdadTextChanged"/>
-                
-                <Label Text="{Binding AgeError}" 
-                       TextColor="#DC2626" 
-                       FontSize="12"/>
+
+                <Label Text="{Binding AgeError}" Style="{StaticResource ErrorLabel}"/>
             </VerticalStackLayout>
 
             <!-- Campo: Descripción -->
             <VerticalStackLayout Spacing="4">
-                <Label Text="Descripción" FontAttributes="Bold"/>
+                <Label Text="Descripción" Style="{StaticResource FieldLabel}"/>
                 <Editor Text="{Binding Description, Mode=TwoWay}" 
                         Placeholder="Descrición sobre el perfil..." 
                         HeightRequest="100" />
@@ -54,18 +50,29 @@
 
             <Button Text="Guardar" 
                     Command="{Binding SaveCommand}" 
-                    BackgroundColor="#0288D1" 
-                    TextColor="White" 
-                    CornerRadius="8" 
-                    FontAttributes="Bold"
-                    Margin="0, 15, 0, 0"/>
+                    Style="{StaticResource PrimaryButton}"
+                    Margin="0,10,0,0" />
 
-            <!-- Mensaje de Estado -->
-            <Label Text="{Binding StatusMessage}" 
-                TextColor="#16A34A" 
-                HorizontalOptions="Center" 
-                FontSize="13"
-                FontAttributes="Bold"/>
+            <Border IsVisible="{Binding IsStatusVisible}"
+                    BackgroundColor="#DCFCE7"
+                    Stroke="{StaticResource SuccessColor}"
+                    StrokeThickness="1"
+                    Padding="16, 12"
+                    HorizontalOptions="Center"
+                    Margin="0, 10, 0, 0">
+
+                <!-- Borde redondeado -->
+                <Border.StrokeShape>
+                    <RoundRectangle CornerRadius="8" />
+                </Border.StrokeShape>
+
+                <!-- El texto dentro de la alerta -->
+                <Label Text="{Binding StatusMessage}" 
+                       TextColor="{StaticResource SuccessColor}" 
+                       HorizontalOptions="Center" 
+                       FontAttributes="Bold"
+                       FontSize="13"/>
+            </Border>
 
         </VerticalStackLayout>
     </ScrollView>

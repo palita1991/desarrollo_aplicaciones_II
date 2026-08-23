@@ -1,11 +1,7 @@
 ﻿using AppProfile.Models;
-using System;
-using System.Collections.Generic;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
-using System.Text;
 using System.Windows.Input;
-using System.Linq;
 
 namespace AppProfile.ViewModels
 {
@@ -15,11 +11,11 @@ namespace AppProfile.ViewModels
         private UserProfile _user;
 
         // Evento INotifyPropertyChanged
-        public event PropertyChangedEventHandler PropertyChanged;
+        public event PropertyChangedEventHandler? PropertyChanged;
 
         // Sirve para mostrar mensaje de estado en el formulario
-        private string _statusMessage;
-        public string StatusMessage
+        private string? _statusMessage;
+        public string? StatusMessage
         {
             get => _statusMessage;
             set
@@ -67,8 +63,8 @@ namespace AppProfile.ViewModels
                 }
             }
         }
-        private string _ageInput;
-        public string Age
+        private string? _ageInput;
+        public string? Age
         {
             get => _ageInput;
             set
@@ -88,7 +84,7 @@ namespace AppProfile.ViewModels
             }
         }
 
-        public string Description
+        public string? Description
         {
             get => _user.Description;
             set
@@ -101,7 +97,7 @@ namespace AppProfile.ViewModels
             }
         }
 
-        public string ProfileImageUrl
+        public string? ProfileImageUrl
         {
             get => _user.ProfileImageUrl;
             set
@@ -114,23 +110,37 @@ namespace AppProfile.ViewModels
             }
         }
 
+        private bool _isStatusVisible;
+        public bool IsStatusVisible
+        {
+            get => _isStatusVisible;
+            set
+            {
+                if (_isStatusVisible != value)
+                {
+                    _isStatusVisible = value;
+                    OnPropertyChanged();
+                }
+            }
+        }
+
         // Propiedades para mostrar los errores en pantalla dependiendo que dato falte completar o sea inválido
-        private string _nameError;
-        public string NameError
+        private string? _nameError;
+        public string? NameError
         {
             get => _nameError;
             set { _nameError = value; OnPropertyChanged(); }
         }
 
-        private string _ageError;
-        public string AgeError
+        private string? _ageError;
+        public string? AgeError
         {
             get => _ageError;
             set { _ageError = value; OnPropertyChanged(); }
         }
 
-        // Validación y Guardado
-        private void ExecuteSave()
+        // Validación y Guardado. Si es exitoso se muestra un cartel abajo por 5 segundos
+        private async void ExecuteSave()
         {
             NameError = string.Empty;
             AgeError = string.Empty;
@@ -163,15 +173,19 @@ namespace AppProfile.ViewModels
             if (hasErrors) return;
 
             StatusMessage = "¡Perfil guardado con éxito!";
-
+            IsStatusVisible = true;
             //  Notificación manual para las vistas
             OnPropertyChanged(nameof(Name));
             OnPropertyChanged(nameof(Age));
             OnPropertyChanged(nameof(Description));
+
+            await Task.Delay(5000);
+
+            IsStatusVisible = false;
         }
 
         // Método para visualizar que los datos han sufrido cambios
-        protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = null)
+        protected virtual void OnPropertyChanged([CallerMemberName] string? propertyName = null)
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }

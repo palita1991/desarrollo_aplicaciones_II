@@ -13,8 +13,6 @@ namespace AppProfile
         }
         private void OnEdadTextChanged(object sender, TextChangedEventArgs e)
         {
-            // if (string.IsNullOrWhiteSpace(e.NewTextValue)) return;
-
             // Verificación que todos los caracteres sean numericos
             bool esValido = e.NewTextValue.All(char.IsDigit);
 
