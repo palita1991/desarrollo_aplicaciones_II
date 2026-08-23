@@ -4,7 +4,11 @@ using System.Text;
 
 namespace AppProfile.Models
 {
-    internal class UserProfile
+    public class UserProfile
     {
+        public required string Name { get; set; }
+        public required int Age { get; set; }
+        public string? Description { get; set; }
+        public string? ProfileImageUrl { get; set; }
     }
 }

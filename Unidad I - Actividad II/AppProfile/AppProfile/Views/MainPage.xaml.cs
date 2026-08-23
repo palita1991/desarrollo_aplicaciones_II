@@ -1,24 +1,28 @@
-﻿namespace AppProfile
+﻿using AppProfile.ViewModels;
+
+namespace AppProfile
 {
     public partial class MainPage : ContentPage
     {
-        int count = 0;
 
         public MainPage()
         {
             InitializeComponent();
+
+            BindingContext = new ProfileViewModel();
         }
-
-        private void OnCounterClicked(object? sender, EventArgs e)
+        private void OnEdadTextChanged(object sender, TextChangedEventArgs e)
         {
-            count++;
+            // if (string.IsNullOrWhiteSpace(e.NewTextValue)) return;
 
-            if (count == 1)
-                CounterBtn.Text = $"Clicked {count} time";
-            else
-                CounterBtn.Text = $"Clicked {count} times";
+            // Verificación que todos los caracteres sean numericos
+            bool esValido = e.NewTextValue.All(char.IsDigit);
 
-            SemanticScreenReader.Announce(CounterBtn.Text);
+            if (!esValido)
+            {
+                // Al querer ingresar letras las borra automaticamente
+                ((Entry)sender).Text = e.OldTextValue;
+            }
         }
     }
 }
