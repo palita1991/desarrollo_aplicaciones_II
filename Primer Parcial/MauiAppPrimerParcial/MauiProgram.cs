@@ -1,6 +1,7 @@
-﻿using MauiApiApp.Services;
-using MauiApiApp.ViewModels;
-using MauiApiApp.Views;
+﻿using MauiAppPrimerParcial.Views;
+using MauiAppPrimerParcial.ViewModels;
+using MauiAppPrimerParcial.Services;
+using CommunityToolkit.Maui;
 
 namespace MauiAppPrimerParcial
 {
@@ -11,6 +12,7 @@ namespace MauiAppPrimerParcial
             var builder = MauiApp.CreateBuilder();
             builder
                 .UseMauiApp<App>()
+                .UseMauiCommunityToolkit()
                 .ConfigureFonts(fonts =>
                 {
                     fonts.AddFont("OpenSans-Regular.ttf", "OpenSansRegular");

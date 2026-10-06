@@ -1,17 +1,18 @@
 using System.Collections.ObjectModel;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
-using MauiApiApp.Models;
-using MauiApiApp.Services;
+using MauiAppPrimerParcial.Models;
 
-namespace MauiApiApp.ViewModels;
+using MauiAppPrimerParcial.Services;
+
+namespace MauiAppPrimerParcial.ViewModels;
 
 public partial class MainViewModel : ObservableObject
 {
     private readonly IApiService _apiService;
 
     [ObservableProperty]
-    private ObservableCollection<Post> posts;
+    private ObservableCollection<User> users;
 
     [ObservableProperty]
     private string statusMessage;
@@ -22,7 +23,7 @@ public partial class MainViewModel : ObservableObject
     public MainViewModel(IApiService apiService)
     {
         _apiService = apiService;
-        Posts = new ObservableCollection<Post>();
+        Users = new ObservableCollection<User>();
     }
 
     [RelayCommand]
@@ -32,9 +33,9 @@ public partial class MainViewModel : ObservableObject
 
         IsBusy = true;
         StatusMessage = "Cargando datos...";
-        Posts.Clear();
+        Users.Clear();
 
-        var (data, error) = await _apiService.GetPostsAsync();
+        var (data, error) = await _apiService.GetUsersAsync();
 
         if (error != null)
         {
@@ -46,24 +47,30 @@ public partial class MainViewModel : ObservableObject
             // Cargamos solo los primeros 10 para no saturar la UI en esta prueba
             foreach (var post in data.Take(10))
             {
-                Posts.Add(post);
+                Users.Add(post);
             }
         }
 
         IsBusy = false;
     }
 
-    // Solución al Error #1: Navegamos a una ruta semántica ("PostDetail") y enviamos el parámetro
+    // Navegamos a una ruta semántica ("UserDetail") y enviamos el parámetro
     [RelayCommand]
-    private async Task GoToDetailsAsync(Post selectedPost)
+    private async Task GoToDetailsAsync(int selectedUserId)
     {
-        if (selectedPost == null) return;
+        if (selectedUserId <= 0)
+        {
+            StatusMessage = "Error: El ID del usuario no es válido.";
+            return;
+        }
+
+        StatusMessage = $"Navegando al usuario ID: {selectedUserId}...";
 
         var parameters = new Dictionary<string, object>
         {
-            { "PostId", selectedPost.Id } // Pasamos el ID real
+            { "UserId", selectedUserId } // Pasamos el entero
         };
 
-        await Shell.Current.GoToAsync("PostDetail", parameters);
+        await Shell.Current.GoToAsync("UserDetail", parameters);
     }
 }

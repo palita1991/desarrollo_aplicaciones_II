@@ -1,20 +1,18 @@
 using CommunityToolkit.Mvvm.ComponentModel;
-using CommunityToolkit.Mvvm.Input;
-using MauiApiApp.Models;
-using MauiApiApp.Services;
+using MauiAppPrimerParcial.Models;
+using MauiAppPrimerParcial.Services;
 
-namespace MauiApiApp.ViewModels;
+namespace MauiAppPrimerParcial.ViewModels;
 
-[QueryProperty(nameof(PostId), "PostId")] 
-public partial class DetailViewModel : ObservableObject
+public partial class DetailViewModel : ObservableObject, IQueryAttributable
 {
     private readonly IApiService _apiService;
 
     [ObservableProperty]
-    private int postId;}
+    private int userId;
 
     [ObservableProperty]
-    private Post currentPost;
+    private User currentUser = new User();
 
     [ObservableProperty]
     private string statusMessage;
@@ -27,26 +25,37 @@ public partial class DetailViewModel : ObservableObject
         _apiService = apiService;
     }
 
-    [RelayCommand]
-    private async Task LoadPostDetailsAsync()
+    private async Task LoadUserDetailsAsync()
     {
-        if (PostId == 0) return;
+        if (UserId == 0) return;
 
         IsBusy = true;
-        StatusMessage = "Cargando detalle del servidor...";
+        StatusMessage = "Cargando detalle del usuario...";
 
-        var (data, error) = await _apiService.GetPostByIdAsync(PostId);
+        var (data, error) = await _apiService.GetUserByIdAsync(UserId);
 
         if (error != null)
         {
             StatusMessage = error;
         }
-        else
+        else if (data != null)
         {
-            CurrentPost = data;
+            CurrentUser = data;
             StatusMessage = string.Empty;
         }
 
         IsBusy = false;
+    }
+
+    public void ApplyQueryAttributes(IDictionary<string, object> query)
+    {
+        if (query.ContainsKey("UserId"))
+        {
+            // Almacenamos el ID recibido
+            UserId = Convert.ToInt32(query["UserId"]);
+
+            // Lo usamos para cargar datos dinámicamente
+            _ = LoadUserDetailsAsync();
+        }
     }
 }

@@ -1,13 +1,7 @@
 using System.Net.Http.Json;
-using MauiApiApp.Models;
+using MauiAppPrimerParcial.Models;
 
-namespace MauiApiApp.Services;
-
-public interface IApiService
-{
-    Task<(List<Post> Data, string ErrorMessage)> GetPostsAsync();
-    Task<(Post Data, string ErrorMessage)> GetPostByIdAsync(int id);
-}
+namespace MauiAppPrimerParcial.Services;
 
 public class ApiService : IApiService
 {
@@ -18,12 +12,12 @@ public class ApiService : IApiService
         _httpClient = new HttpClient { BaseAddress = new Uri("https://jsonplaceholder.typicode.com/") };
     }
 
-    public async Task<(List<Post> Data, string ErrorMessage)> GetPostsAsync()
+    public async Task<(List<User> Data, string ErrorMessage)> GetUsersAsync()
     {
         try
         {
-            var response = await _httpClient.GetAsync("posts");
-            return await ProcessResponse<List<Post>>(response);
+            var response = await _httpClient.GetAsync("users");
+            return await ProcessResponse<List<User>>(response);
         }
         catch (HttpRequestException)
         {
@@ -35,12 +29,12 @@ public class ApiService : IApiService
         }
     }
 
-    public async Task<(Post Data, string ErrorMessage)> GetPostByIdAsync(int id)
+    public async Task<(User Data, string ErrorMessage)> GetUserByIdAsync(int id)
     {
         try
         {
-            var response = await _httpClient.GetAsync($"posts/{id}");
-            return await ProcessResponse<Post>(response);
+            var response = await _httpClient.GetAsync($"users/{id}");
+            return await ProcessResponse<User>(response);
         }
         catch (HttpRequestException)
         {
