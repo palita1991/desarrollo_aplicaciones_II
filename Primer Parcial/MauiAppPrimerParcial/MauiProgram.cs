@@ -1,5 +1,7 @@
 ﻿using MauiAppPrimerParcial.Views;
 using MauiAppPrimerParcial.ViewModels;
+using MauiAppPrimerParcial.Interfaces;
+using MauiAppPrimerParcial.Repositories;
 using MauiAppPrimerParcial.Services;
 using CommunityToolkit.Maui;
 
@@ -19,15 +21,15 @@ namespace MauiAppPrimerParcial
                     fonts.AddFont("OpenSans-Semibold.ttf", "OpenSansSemibold");
                 });
 
-            // Servicios
+            // Infraestructura tipo singleton, es decir, se crea una sola instancia de la clase y se comparte en toda la aplicación
             builder.Services.AddSingleton<IApiService, ApiService>();
+            builder.Services.AddSingleton<IUserRepository, UserRepositorySQLite>();
 
-            // ViewModels
+            // Aplicación tipo transient, es decir, se crea una nueva instancia de la clase cada vez que se solicita
             builder.Services.AddTransient<MainViewModel>();
-            builder.Services.AddTransient<DetailViewModel>();
+            builder.Services.AddTransient<MainPage>(); 
 
-            // Views
-            builder.Services.AddTransient<MainPage>();
+            builder.Services.AddTransient<DetailViewModel>();
             builder.Services.AddTransient<DetailPage>();
 
             return builder.Build();

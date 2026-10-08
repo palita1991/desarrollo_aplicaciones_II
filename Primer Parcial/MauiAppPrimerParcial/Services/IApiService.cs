@@ -2,7 +2,7 @@ using MauiAppPrimerParcial.Models;
 
 namespace MauiAppPrimerParcial.Services;
 
-// Interfaz que define el contrato de un servicio de acceso a datos vía HTTP.
+// Contrato para el consumo de la API externa
 public interface IApiService
 {
     Task<(List<User> Data, string ErrorMessage)> GetUsersAsync();

@@ -3,6 +3,7 @@ using MauiAppPrimerParcial.Models;
 
 namespace MauiAppPrimerParcial.Services;
 
+// Implementación del servicio de API para interactuar con el endpoint 
 public class ApiService : IApiService
 {
     private readonly HttpClient _httpClient;

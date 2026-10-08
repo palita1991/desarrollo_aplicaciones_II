@@ -1,15 +1,18 @@
-using System.Collections.ObjectModel;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
+using MauiAppPrimerParcial.Interfaces;
 using MauiAppPrimerParcial.Models;
-
 using MauiAppPrimerParcial.Services;
+using System.Collections.ObjectModel;
 
 namespace MauiAppPrimerParcial.ViewModels;
 
+// Planificación de la lógica de la pantalla principal
 public partial class MainViewModel : ObservableObject
 {
+    //Dependencias
     private readonly IApiService _apiService;
+    private readonly IUserRepository _userRepository;
 
     [ObservableProperty]
     private ObservableCollection<User> users;
@@ -20,41 +23,49 @@ public partial class MainViewModel : ObservableObject
     [ObservableProperty]
     private bool isBusy;
 
-    public MainViewModel(IApiService apiService)
+    public MainViewModel(IApiService apiService, IUserRepository userRepository)
     {
         _apiService = apiService;
+        _userRepository = userRepository;
         Users = new ObservableCollection<User>();
     }
 
+    // Sincronización al intentar leer la API pero en el modo offline recurre a la base de datos
     [RelayCommand]
     private async Task LoadDataAsync()
     {
-        if (IsBusy) return;
-
         IsBusy = true;
         StatusMessage = "Cargando datos...";
-        Users.Clear();
 
-        var (data, error) = await _apiService.GetUsersAsync();
+        // Buscar en API
+        var (apiUsers, error) = await _apiService.GetUsersAsync();
 
-        if (error != null)
+        if (apiUsers != null && apiUsers.Any())
         {
-            StatusMessage = error;
+            // Si hay éxito, guardamos en la base de datos (Persistencia)
+            await _userRepository.SaveUsersAsync(apiUsers);
+            Users = new ObservableCollection<User>(apiUsers);
+            StatusMessage = "Datos actualizados desde la red.";
         }
-        else if (data != null && data.Any())
+        else
         {
-            StatusMessage = $"Se cargaron {data.Count} elementos.";
-            // Cargamos solo los primeros 10 para no saturar la UI en esta prueba
-            foreach (var post in data.Take(10))
+            // Si falla la API por falta de internet, se recurre a la base de datos local
+            var localUsers = await _userRepository.GetAllUsersAsync();
+            if (localUsers.Any())
             {
-                Users.Add(post);
+                Users = new ObservableCollection<User>(localUsers);
+                StatusMessage = "Modo offline: Mostrando datos guardados base de datos local.";
+            }
+            else
+            {
+                StatusMessage = "Error de red y no hay datos locales guardados.";
             }
         }
 
         IsBusy = false;
     }
 
-    // Navegamos a una ruta semántica ("UserDetail") y enviamos el parámetro
+    // Se pasa la ID del usuario seleccionado para una busqueda concreta
     [RelayCommand]
     private async Task GoToDetailsAsync(int selectedUserId)
     {
@@ -64,11 +75,10 @@ public partial class MainViewModel : ObservableObject
             return;
         }
 
-        StatusMessage = $"Navegando al usuario ID: {selectedUserId}...";
 
         var parameters = new Dictionary<string, object>
         {
-            { "UserId", selectedUserId } // Pasamos el entero
+            { "UserId", selectedUserId }
         };
 
         await Shell.Current.GoToAsync("UserDetail", parameters);

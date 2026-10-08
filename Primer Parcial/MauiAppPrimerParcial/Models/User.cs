@@ -1,9 +1,11 @@
 using System.Text.Json.Serialization;
-
+using SQLite;
 namespace MauiAppPrimerParcial.Models;
 
+// Entidad Principal: User
 public class User
 {
+    [PrimaryKey]
     [JsonPropertyName("id")]
     public int Id { get; set; }
 
