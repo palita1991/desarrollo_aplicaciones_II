@@ -1,0 +1,5 @@
+<Solution>
+  <Project Path="MauiAppPrimerParcial/MauiAppPrimerParcial.csproj">
+    <Deploy Solution="Debug|*" />
+  </Project>
+</Solution>
