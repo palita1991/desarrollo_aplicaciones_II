@@ -49,7 +49,6 @@
                     <DataTemplate>
                         <Frame Margin="10,5" Padding="15" CornerRadius="8" HasShadow="True">
                             <Grid ColumnDefinitions="*, Auto" ColumnSpacing="10">
-
                                 <!-- Columna 0: Datos apilados del usuario -->
                                 <VerticalStackLayout Grid.Column="0" VerticalOptions="Center" Spacing="4">
                                     <HorizontalStackLayout Spacing="5">
