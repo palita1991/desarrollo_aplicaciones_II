@@ -12,16 +12,28 @@ jobs:
     # Ejecucion
     runs-on: windows-latest
 
+    # Pipeline en múltiples versiones de .NET
+    strategy:
+      matrix:
+        dotnet-version: ['8.0.x', '10.0.x']
+
     steps:
     # Descarga de código
     - name: Checkout Code
       uses: actions/checkout@v4
 
-    # Entorno .NET
-    - name: Setup .NET
+    - name: Setup .NET ${{ matrix.dotnet-version }}
       uses: actions/setup-dotnet@v4
       with:
-        dotnet-version: '10.0.x' # Coincide con el net10.0 de tu proyecto
+        dotnet-version: ${{ matrix.dotnet-version }}
+        
+    - name: Cache NuGet Packages
+      uses: actions/cache@v4
+      with:
+        path: ~/.nuget/packages
+        key: ${{ runner.os }}-nuget-${{ hashFiles('**/*.csproj') }}
+        restore-keys: |
+          ${{ runner.os }}-nuget-
 
     # Instalacion de herramientas
     - name: Install MAUI Workload
@@ -37,4 +49,11 @@ jobs:
 
     # Ejecucion del proyecto
     - name: Run Unit Tests
-      run: dotnet test MauiAppSegundoParcial.Tests/MauiAppSegundoParcial.Tests.csproj --no-build --configuration Release
+      run: dotnet test MauiAppSegundoParcial.Tests/MauiAppSegundoParcial.Tests.csproj --no-build --configuration Release --logger "trx;LogFileName=test-results.trx"
+
+    - name: Upload Test Results
+      uses: actions/upload-artifact@v4
+      if: always()
+      with:
+        name: Resultados-Pruebas-NET-${{ matrix.dotnet-version }}
+        path: '**/test-results.trx'
