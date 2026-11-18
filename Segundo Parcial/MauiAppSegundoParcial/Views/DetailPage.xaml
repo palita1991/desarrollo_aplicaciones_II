@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:viewmodels="clr-namespace:MauiAppSegundoParcial.ViewModels"
+             xmlns:toolkit="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
+             x:Class="MauiAppSegundoParcial.Views.DetailPage"
+             x:DataType="viewmodels:DetailViewModel">
+    <ContentPage.Resources>
+        <ResourceDictionary>
+            <toolkit:InvertedBoolConverter x:Key="InvertedBoolConverter" />
+        </ResourceDictionary>
+    </ContentPage.Resources>
+
+    <ScrollView>
+        <VerticalStackLayout VerticalOptions="Start" Padding="20" Spacing="15">
+
+            <Label Text="{Binding StatusMessage}" TextColor="Red" HorizontalOptions="Center" />
+            <ActivityIndicator IsRunning="{Binding IsBusy}" IsVisible="{Binding IsBusy}" HorizontalOptions="Center" />
+            <!-- Foto de Perfil -->
+            <Image Source="{Binding ProfileImageSource}" 
+                   WidthRequest="150" 
+                   HeightRequest="150" 
+                   Aspect="AspectFill" 
+                   HorizontalOptions="Center">
+                <Image.Clip>
+                    <EllipseGeometry Center="75,75" RadiusX="75" RadiusY="75" />
+                </Image.Clip>
+            </Image>
+            <Button Text="Tomar Foto de Perfil" 
+                    Command="{Binding TakePhotoCommand}" 
+                    BackgroundColor="{StaticResource Primary}" 
+                    TextColor="White" 
+                    Margin="0,0,0,10"/>
+
+            <!-- Campo de Ubicación -->
+            <Label Text="UBICACIÓN:" FontSize="14" TextColor="{StaticResource Primary}" FontAttributes="Bold" />
+            <Grid ColumnDefinitions="*, Auto" ColumnSpacing="10">
+                <Entry Grid.Column="0" Text="{Binding CurrentLocationText}" FontSize="16" IsReadOnly="True" />
+                <Button Grid.Column="1" Text="📍 GPS" Command="{Binding GetLocationCommand}" BackgroundColor="RoyalBlue" TextColor="White" />
+            </Grid>
+            
+            <Frame CornerRadius="20"
+                   HasShadow="True"
+                   WidthRequest="350"
+                   HorizontalOptions="Center"
+                   BorderColor="{StaticResource Primary}"
+                   IsVisible="{Binding IsBusy, Converter={x:StaticResource InvertedBoolConverter}}">
+                <VerticalStackLayout Spacing="10" HorizontalOptions="Center" Padding="10">
+                    <Label Text="NOMBRE" 
+                           FontSize="18" 
+                           TextColor="{StaticResource Primary}" 
+                           HorizontalOptions="Center"/>
+                    <Entry Text="{Binding CurrentUser.Name}" FontSize="16" WidthRequest="300" />
+                    <Label Text="USUARIO" 
+                           FontSize="18" 
+                           TextColor="{StaticResource Primary}" 
+                           HorizontalOptions="Center" />
+                    <Entry Text="{Binding CurrentUser.Username}" FontSize="16" WidthRequest="300" />
+                    <Label Text="EMAIL"
+                           FontSize="18" 
+                           TextColor="{StaticResource Primary}" 
+                           HorizontalOptions="Center" />
+                    <Entry Text="{Binding CurrentUser.Email}" FontSize="16" Keyboard="Email" WidthRequest="300" />
+                    <Label Text="TELÉFONO"
+                           FontSize="18" 
+                           TextColor="{StaticResource Primary}" 
+                           HorizontalOptions="Center" />
+                    <Entry Text="{Binding CurrentUser.Phone}" FontSize="16" WidthRequest="300" />
+                    <Button Text="Guardar" 
+                            Command="{Binding UpdateCommand}" 
+                            BackgroundColor="DarkGreen" 
+                            TextColor="White"
+                            Margin="0,20,0,0" />
+                </VerticalStackLayout>
+            </Frame>
+        </VerticalStackLayout>
+    </ScrollView>
+</ContentPage>
