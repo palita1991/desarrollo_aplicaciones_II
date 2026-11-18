@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!-- Estructura principal de navegación de la aplicación -->
+<Shell
+    x:Class="MauiAppSegundoParcial.AppShell"
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:local="clr-namespace:MauiAppSegundoParcial"
+    xmlns:views="clr-namespace:MauiAppSegundoParcial.Views"
+    Title="MauiAppSegundoParcial">
+    <!--  Página de inicio cuando se inicia laaplicación -->
+    <ShellContent
+        Title="Inicio"
+        ContentTemplate="{DataTemplate views:MainPage}"
+        Route="MainPage" />
+
+</Shell>
