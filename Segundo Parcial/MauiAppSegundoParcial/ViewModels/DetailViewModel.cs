@@ -28,7 +28,7 @@ public partial class DetailViewModel : ObservableObject, IQueryAttributable
     private bool isBusy;
 
     [ObservableProperty]
-    private ImageSource profileImageSource = "dotnet_bot.png"; // Imagen por defecto
+    private string profileImageSource = "dotnet_bot.png";
 
     [ObservableProperty]
     private string currentLocationText = "Ubicación desconocida";
@@ -65,7 +65,7 @@ public partial class DetailViewModel : ObservableObject, IQueryAttributable
         }
     }
 
-    private async Task LoadUserDetailsAsync()
+    public async Task LoadUserDetailsAsync()
     {
         if (UserId == 0) return;
 
@@ -147,9 +147,8 @@ public partial class DetailViewModel : ObservableObject, IQueryAttributable
 
                 if (foto != null)
                 {
-                    // Carga la foto en la interfaz y cierra el flujo (Dispose)
                     var stream = await foto.OpenReadAsync();
-                    ProfileImageSource = ImageSource.FromStream(() => stream);
+                    ProfileImageSource = foto.FullPath;
                 }
             }
             else
