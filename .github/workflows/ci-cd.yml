@@ -43,19 +43,19 @@ jobs:
 
     # Paquetes NuGet
     - name: Restore Dependencies
-      run: dotnet restore MauiAppSegundoParcial.slnx
+      run: dotnet restore MauiAppSegundoParcial.Tests/MauiAppSegundoParcial.Tests.csproj
 
     # Compilacion completa
-    - name: Build Solution
-      run: dotnet build MauiAppSegundoParcial.slnx --no-restore --configuration ${{ matrix.configuration }}
+    - name: Build Test Project
+      run: dotnet build MauiAppSegundoParcial.Tests/MauiAppSegundoParcial.Tests.csproj --no-restore --configuration ${{ matrix.configuration }}
 
     # Ejecucion del proyecto
     - name: Run Unit Tests
-      run: dotnet test MauiAppSegundoParcial.Tests/MauiAppSegundoParcial.Tests.csproj --no-build --configuration ${{ matrix.configuration }} --logger "trx;LogFileName=test-results.trx"
+      run: dotnet test MauiAppSegundoParcial.Tests/MauiAppSegundoParcial.Tests.csproj --no-build --configuration ${{ matrix.configuration }} --results-directory ./TestResults --logger "trx;LogFileName=test-results.trx"
 
     - name: Upload Test Results
       uses: actions/upload-artifact@v4
       if: always()
       with:
         name: Resultados-Pruebas-${{ matrix.configuration }}
-        path: '**/test-results.trx'
+        path: Segundo Parcial/TestResults/test-results.trx
