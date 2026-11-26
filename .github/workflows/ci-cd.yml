@@ -29,6 +29,11 @@ jobs:
       uses: actions/setup-dotnet@v4
       with:
         dotnet-version: '10.0.x'
+
+    - name: Pin .NET 10 SDK
+      run: |
+        Set-Content -Path global.json -Value '{"sdk":{"version":"10.0.100","rollForward":"latestMinor","allowPrerelease":false}}'
+        dotnet --version
         
     - name: Cache NuGet Packages
       uses: actions/cache@v4
@@ -44,15 +49,15 @@ jobs:
 
     # Paquetes NuGet
     - name: Restore Dependencies
-      run: dotnet restore MauiAppSegundoParcial.Tests/MauiAppSegundoParcial.Tests.csproj -r win-x64 -p:Configuration=${{ matrix.configuration }}
+      run: dotnet restore MauiAppSegundoParcial.Tests/MauiAppSegundoParcial.Tests.csproj -p:Configuration=${{ matrix.configuration }}
 
     # Compilacion completa
     - name: Build Test Project
-      run: dotnet build MauiAppSegundoParcial.Tests/MauiAppSegundoParcial.Tests.csproj --no-restore --configuration ${{ matrix.configuration }} -r win-x64
+      run: dotnet build MauiAppSegundoParcial.Tests/MauiAppSegundoParcial.Tests.csproj --no-restore --configuration ${{ matrix.configuration }}
 
     # Ejecucion del proyecto
     - name: Run Unit Tests
-      run: dotnet test MauiAppSegundoParcial.Tests/MauiAppSegundoParcial.Tests.csproj --no-build --configuration ${{ matrix.configuration }} -r win-x64 --results-directory ./TestResults --logger "trx;LogFileName=test-results.trx"
+      run: dotnet test MauiAppSegundoParcial.Tests/MauiAppSegundoParcial.Tests.csproj --no-build --configuration ${{ matrix.configuration }} --results-directory ./TestResults --logger "trx;LogFileName=test-results.trx"
 
     - name: Upload Test Results
       uses: actions/upload-artifact@v4
