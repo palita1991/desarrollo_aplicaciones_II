@@ -17,6 +17,7 @@ jobs:
         working-directory: "Segundo Parcial"
 
     strategy:
+      fail-fast: false
       matrix:
         configuration: [ "Debug", "Release" ]
 
@@ -43,15 +44,15 @@ jobs:
 
     # Paquetes NuGet
     - name: Restore Dependencies
-      run: dotnet restore MauiAppSegundoParcial.Tests/MauiAppSegundoParcial.Tests.csproj
+      run: dotnet restore MauiAppSegundoParcial.Tests/MauiAppSegundoParcial.Tests.csproj -r win-x64 -p:Configuration=${{ matrix.configuration }}
 
     # Compilacion completa
     - name: Build Test Project
-      run: dotnet build MauiAppSegundoParcial.Tests/MauiAppSegundoParcial.Tests.csproj --no-restore --configuration ${{ matrix.configuration }}
+      run: dotnet build MauiAppSegundoParcial.Tests/MauiAppSegundoParcial.Tests.csproj --no-restore --configuration ${{ matrix.configuration }} -r win-x64
 
     # Ejecucion del proyecto
     - name: Run Unit Tests
-      run: dotnet test MauiAppSegundoParcial.Tests/MauiAppSegundoParcial.Tests.csproj --no-build --configuration ${{ matrix.configuration }} --results-directory ./TestResults --logger "trx;LogFileName=test-results.trx"
+      run: dotnet test MauiAppSegundoParcial.Tests/MauiAppSegundoParcial.Tests.csproj --no-build --configuration ${{ matrix.configuration }} -r win-x64 --results-directory ./TestResults --logger "trx;LogFileName=test-results.trx"
 
     - name: Upload Test Results
       uses: actions/upload-artifact@v4
